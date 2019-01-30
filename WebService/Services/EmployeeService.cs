@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebService.Dto;
 using WebService.Models;
 
 namespace WebService.Services
@@ -15,9 +16,24 @@ namespace WebService.Services
             _context = context;
         }
 
-        public List<Employees> GetAllEmployees()
+        public List<EmployeeDto> GetAllEmployees()
         {
-            return _context.Employees.Include(e => e.Company).ToList();
+            var query = _context.Employees
+                .Join(_context.Companies,
+                e => e.CompanyId,
+                c => c.Id,
+                (e,c) => new EmployeeDto
+                {
+                    Id = e.Id,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    Telephone = e.Telephone,
+                    Email = e.Email,
+                    CompanyId = e.CompanyId,
+                    CompanyName =c.Name
+                });
+            return query.ToList(); ;
+
         }
 
         public void AddEmployee(Employees employee)
