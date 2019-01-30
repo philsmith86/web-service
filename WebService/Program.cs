@@ -14,6 +14,12 @@ namespace WebService
     {
         public static void Main(string[] args)
         {
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json");
+
+            var configuration = builder.Build();
+
             CreateWebHostBuilder(args).Build().Run();
         }
 
