@@ -11,7 +11,7 @@ namespace WebService.Services
     {
         List<EmployeeDto> GetAllEmployees();
         void AddEmployee(Employees employee);
-        Employees GetEmployeeById(int id);
+        EmployeeDto GetEmployeeById(int id);
         void UpdateEmployee(Employees employee);
         void DeleteEmployee(int id);
     }
