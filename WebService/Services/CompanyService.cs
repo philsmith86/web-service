@@ -14,37 +14,40 @@ namespace WebService.Services
             _context = context;
         }
 
-        public List<Companies> GetAllCompanies()
+        public Task<List<Companies>> GetAllCompanies()
         {
-            return _context.Companies.ToList();
+            return Task.FromResult(_context.Companies.ToList());
         }
 
-        public void AddCompany(Companies company)
+        public Task<bool> AddCompany(Companies company)
         {
             _context.Companies.Add(company);
-            _context.SaveChanges();
+            var result = _context.SaveChanges();
+            return Task.FromResult(result>0);
         }
 
-        public Companies GetCompanyById(int id)
+        public Task<Companies> GetCompanyById(int id)
         {
-            return _context.Companies.Single(c => c.Id == id);
+            return Task.FromResult(_context.Companies.Single(c => c.Id == id));
         }
 
-        public void UpdateCompany(Companies company)
+        public Task<bool> UpdateCompany(Companies company)
         {
-            Companies currentCompany = GetCompanyById(company.Id);
+            Companies currentCompany = _context.Companies.Single(c => c.Id == company.Id);
             currentCompany.Name = company.Name;
             currentCompany.Email = company.Email;
             currentCompany.Web = company.Web;
-            _context.SaveChanges();
+            var result = _context.SaveChanges();
+            return Task.FromResult(result > 0);
 
         }
 
-        public void DeleteCompany(int id)
+        public Task<bool> DeleteCompany(int id)
         {
-            Companies companyToBeDeleted = GetCompanyById(id);
+            Companies companyToBeDeleted = _context.Companies.Single(c => c.Id == id);
             _context.Companies.Remove(companyToBeDeleted);
-            _context.SaveChanges();
+            var result = _context.SaveChanges();
+            return Task.FromResult(result > 0);
         }
     }
 }

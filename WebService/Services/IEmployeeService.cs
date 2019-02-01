@@ -9,10 +9,10 @@ namespace WebService.Services
 {
     public interface IEmployeeService
     {
-        List<EmployeeDto> GetAllEmployees();
-        void AddEmployee(Employees employee);
-        EmployeeDto GetEmployeeById(int id);
-        void UpdateEmployee(Employees employee);
-        void DeleteEmployee(int id);
+        Task<List<EmployeeDto>> GetAllEmployees();
+        Task<bool> AddEmployee(Employees employee);
+        Task<EmployeeDto> GetEmployeeById(int id);
+        Task<bool> UpdateEmployee(Employees employee);
+        Task<bool> DeleteEmployee(int id);
     }
 }

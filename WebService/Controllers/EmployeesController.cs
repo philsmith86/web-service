@@ -23,11 +23,12 @@ namespace WebService.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<EmployeeDto>> Get()
+        public async Task<ActionResult<List<EmployeeDto>>> Get()
         {
             try
             {
-                return Ok(_employeeService.GetAllEmployees());
+                var result = await _employeeService.GetAllEmployees();
+                return Ok(result);
 
             }
             catch (Exception e)
@@ -37,11 +38,12 @@ namespace WebService.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<EmployeeDto> Get(int id)
+        public async Task<ActionResult<EmployeeDto>> Get(int id)
         {
             try
             {
-                return Ok(_employeeService.GetEmployeeById(id));
+                var result = await _employeeService.GetEmployeeById(id);
+                return Ok(result);
 
             }
             catch (Exception e)
@@ -51,38 +53,43 @@ namespace WebService.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Employees employee)
+        public async Task<ActionResult> Post([FromBody] Employees employee)
         {
             if (ModelState.IsValid)
             {
-                _employeeService.AddEmployee(employee);
-                return StatusCode(200);
+                var result = await _employeeService.AddEmployee(employee);
+                return Ok(result);
             }            
             return StatusCode(400);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Employees employee)
+        public async Task<ActionResult> Put(int id, [FromBody] Employees employee)
         {
+            if (id != employee.Id)
+            {
+                return BadRequest("ID Mis-Match");
+            }
+
             if (ModelState.IsValid)
             {
-                _employeeService.UpdateEmployee(employee);
-                return StatusCode(200);
+                var result = await _employeeService.UpdateEmployee(employee);
+                return Ok(result);
             }
             return StatusCode(400);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                _employeeService.DeleteEmployee(id);
-                return Ok();
+                var result = await _employeeService.DeleteEmployee(id);
+                return Ok(result);
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
     }

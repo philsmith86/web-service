@@ -8,10 +8,10 @@ namespace WebService.Services
 {
     public interface ICompanyService
     {
-        List<Companies> GetAllCompanies();
-        void AddCompany(Companies company);
-        Companies GetCompanyById(int id);
-        void UpdateCompany(Companies company);
-        void DeleteCompany(int id);
+        Task<List<Companies>> GetAllCompanies();
+        Task<bool> AddCompany(Companies company);
+        Task<Companies> GetCompanyById(int id);
+        Task<bool> UpdateCompany(Companies company);
+        Task<bool> DeleteCompany(int id);
     }
 }

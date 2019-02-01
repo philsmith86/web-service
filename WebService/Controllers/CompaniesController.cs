@@ -20,11 +20,12 @@ namespace WebService.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<List<Companies>> Get()
+        public async Task<ActionResult<List<Companies>>> Get()
         {
             try
             {
-                return Ok(_companyService.GetAllCompanies());
+                var result = await _companyService.GetAllCompanies();
+                return Ok(result);
 
             }
             catch (Exception e)
@@ -34,11 +35,12 @@ namespace WebService.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Companies> Get(int id)
+        public async Task<ActionResult<Companies>> Get(int id)
         {
             try
             {
-                return Ok(_companyService.GetCompanyById(id));
+                var result = await _companyService.GetCompanyById(id);
+                return Ok(result);
 
             } catch (Exception e)
             {
@@ -47,34 +49,39 @@ namespace WebService.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Companies company)
+        public async Task<ActionResult> Post([FromBody] Companies company)
         {
             if (ModelState.IsValid)
             {
-                _companyService.AddCompany(company);
-                return StatusCode(200);
+                var result = await _companyService.AddCompany(company);
+                return Ok(result);
             }
             return StatusCode(400);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Companies company)
+        public async Task<ActionResult> Put(int id, [FromBody] Companies company)
         {
+            if (id != company.Id)
+            {
+                return BadRequest("ID Mis-Match");
+            }
+
             if (ModelState.IsValid)
             {
-                _companyService.UpdateCompany(company);
-                return StatusCode(200);
+                var result = await _companyService.UpdateCompany(company);
+                return Ok(result);
             }
             return StatusCode(400);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                _companyService.DeleteCompany(id);
-                return Ok();
+                var result = await _companyService.DeleteCompany(id);
+                return Ok(result);
             } catch (Exception e)
             {
                 return BadRequest();

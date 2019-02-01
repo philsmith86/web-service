@@ -16,7 +16,7 @@ namespace WebService.Services
             _context = context;
         }
 
-        public List<EmployeeDto> GetAllEmployees()
+        public Task<List<EmployeeDto>> GetAllEmployees()
         {
             var query = _context.Employees
                 .Join(_context.Companies,
@@ -31,18 +31,19 @@ namespace WebService.Services
                     Email = e.Email,
                     CompanyId = e.CompanyId,
                     CompanyName =c.Name
-                });
-            return query.ToList(); ;
+                }).ToList();
+            return Task.FromResult(query);
 
         }
 
-        public void AddEmployee(Employees employee)
+        public Task<bool> AddEmployee(Employees employee)
         {
             _context.Employees.Add(employee);
-            _context.SaveChanges();
+            var result = _context.SaveChanges();
+            return Task.FromResult(result>0);
         }
 
-        public EmployeeDto GetEmployeeById(int id)
+        public Task<EmployeeDto> GetEmployeeById(int id)
         {
             var query = _context.Employees
                 .Join(_context.Companies,
@@ -61,7 +62,7 @@ namespace WebService.Services
                 .Where(e=>e.Id==id)
                 .Single();
 
-            return query; ;
+            return Task.FromResult(query); ;
         }
 
         private Employees GetById(int id)
@@ -69,7 +70,7 @@ namespace WebService.Services
             return _context.Employees.Single(c => c.Id == id);
         }
 
-        public void UpdateEmployee(Employees employee)
+        public Task<bool> UpdateEmployee(Employees employee)
         {
             Employees currentEmployee = GetById(employee.Id);
             currentEmployee.FirstName = employee.FirstName;
@@ -77,15 +78,16 @@ namespace WebService.Services
             currentEmployee.Telephone = employee.Telephone;
             currentEmployee.Email = employee.Email;
             currentEmployee.CompanyId = employee.CompanyId;
-            _context.SaveChanges();
-
+            var result = _context.SaveChanges();
+            return Task.FromResult(result>0);
         }
 
-        public void DeleteEmployee(int id)
+        public Task<bool> DeleteEmployee(int id)
         {
             Employees employeeToBeDeleted = GetById(id);
             _context.Employees.Remove(employeeToBeDeleted);
-            _context.SaveChanges();
+            var result = _context.SaveChanges();
+            return Task.FromResult(result > 0);
         }
     }
 }
